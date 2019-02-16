@@ -4,14 +4,13 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-         VectorStack<Integer> stack = new VectorStack<Integer>();
         Calculator calculator = Calculator.getCalculatorInstance();
         Boolean go = false;
         Boolean go2 = false;
         String operacion ="";
-        Factory gen = new Factory();
+        Factory<String> gen = new Factory<String>();
         Scanner scanner = new Scanner(System.in);
-        iStack<String> stack2;
+        AbstractStack<String> stack2 = null;
         String menu1= "Calculadora encendida\n\nIngrese la direccion del archivo como se muestra: C:\\Users\\ejemplo\\Desktop\\test.txt\nSi desea cerrar el programa escriba el numero cero";
         String menu2= "Elija que tipo de pila quiere utilizar\n1. ArrayList\n2. Vector\n3. Lista";
         String menu3= "Elija que tipo de lista quiere utilizar\n1. Simplemente encadenada\n2. Doblemente encadenada\n3. Circular";
@@ -25,7 +24,7 @@ public class Main {
                 while (sc.hasNextLine()) {
                     operacion += sc.next();
                 }
-                System.out.println("Operaci髇 escaneada: " + operacion);
+                System.out.println("Operaci贸n escaneada: " + operacion);
                 go = true;
 
             } catch (Exception e) {
@@ -45,7 +44,8 @@ public class Main {
                        go2 = true;
                    } break;
                    case 2: {
-                       //Implementaci髇 de un Vector
+                       //Implementaci贸n de un Vector
+                       stack2 = gen.SetType("Vector");
                        go2 = true;
                    } break;
                    case 3:{
@@ -53,61 +53,92 @@ public class Main {
                        String op2 = scanner.nextLine();
                        switch (Integer.parseInt(op2)){
                            case 1:{
-                               //Implementaci髇 de una lista simplemente encadenada
+                               //Implementaci贸n de una lista simplemente encadenada
+
+                               stack2 = new ListStack<String>("SL");
                                go2 = true;
                            } break;
                            case 2:{
-                               //Implementaci髇 de una lista doblemente encadenada
+                               //Implementaci贸n de una lista doblemente encadenada
+                               stack2 = new ListStack<String>("DL");
                                go2 = true;
                            } break;
                            case 3:{
-                               //Implementaci髇 de la lista circular
+                               //Implementaci&oacute;n de la lista circular
+                               stack2 = new ListStack<String>("CL");
                                go2 = true;
                            } break;
                            default:{
-                               System.out.println("Ingrese una opci髇 correcta");
+                               System.out.println("Ingrese una opci贸n correcta");
                            }
                        }
                    } break;
                    default:{
-                       System.out.println("Ingrese una opci髇 correcta");
+                       System.out.println("Ingrese una opci贸n correcta");
                    }
                }
 
            }catch (Exception e){
-               System.out.println("Ingrese un n鷐ero");
+               System.out.println("Ingrese un n煤mero");
                e.printStackTrace();
            }
 
         }
-       if (go2){
+       if (go2) {
            try {
-               for (int i = 0; i<operacion.length();i++)
-                   switch (operacion.charAt(i)){
-                       case '+':{
-                            //Sacamos los datos y los sumamos y el resultado lo volvemos a meter
-                       }break;
-                       case '-':{
+               String num1;
+               String num2;
+               double d1;
+               double d2;
+               for (int i = 0; i < operacion.length(); i++)
+                   switch (operacion.charAt(i)) {
+                       case '+': {
+                           //Sacamos los datos y los sumamos y el resultado lo volvemos a meter
+                           num1 = stack2.pop();
+                           d1 = Double.parseDouble(num1);
+                           num2 = stack2.pop();
+                           d2 = Double.parseDouble(num2);
+                           stack2.push(String.valueOf(calculator.sumar(d1,d2)));
+                       }
+                       break;
+                       case '-': {
                            //Sacamos los datos y los restamos y el resultado lo volvemos a meter
-                       }break;
-                       case '*':{
+                           num1 = stack2.pop();
+                           d1 = Double.parseDouble(num1);
+                           num2 = stack2.pop();
+                           d2 = Double.parseDouble(num2);
+                           stack2.push(String.valueOf(calculator.restar(d1,d2)));
+                       }
+                       break;
+                       case '*': {
                            //Sacamos los datos y los multiplicamos y el resultado lo volvemos a meter
-                       }break;
-                       case '/':{
+                           num1 = stack2.pop();
+                           d1 = Double.parseDouble(num1);
+                           num2 = stack2.pop();
+                           d2 = Double.parseDouble(num2);
+                           stack2.push(String.valueOf(calculator.multiplicacion(d1,d2)));
+                           
+                       }
+                       break;
+                       case '/': {
                            //Sacamos los datos y los dividimos y el resultado lo volvemos a meter
-                       }break;
-                        default:{
-                           //Metemos el n鷐ero
-                        }
+                           num1 = stack2.pop();
+                           d1 = Double.parseDouble(num1);
+                           num2 = stack2.pop();
+                           d2 = Double.parseDouble(num2);
+                           stack2.push(String.valueOf(calculator.division(d1,d2)));
+                       }
+                       break;
+                       default: {
+                           //Metemos el n煤mero
+                           stack2.push(Character.toString(operacion.charAt(i)));
+                       }
                    }
                //Imprimimos el resultado
-           } catch (Exception e){
+               System.out.println("El resulltado es: "+ stack2.pop());
+           } catch (Exception e) {
                e.printStackTrace();
            }
        }
-       /*
-        for (int i = 0; i < 3; i++) {
-            System.out.println(stack.pop());
-        }*/
-    }
+
     }
