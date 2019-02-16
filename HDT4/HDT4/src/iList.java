@@ -10,5 +10,4 @@ public interface iList<E> {
 
     public boolean isEmpty();
 
-
 }
